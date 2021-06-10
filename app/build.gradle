@@ -22,8 +22,32 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            // useProguard true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def appName = "ExoPlayerStreamTest"
+                    outputFileName = appName + "-V${variant.versionName}-${variant.versionCode}-${variant.buildType.name}.apk"
+                }
+            }
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            // useProguard false
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def appName = "ExoPlayerStreamTest"
+                    outputFileName = appName + "-V${variant.versionName}-${variant.versionCode}-${variant.buildType.name}.apk"
+                }
+            }
         }
     }
     compileOptions {
