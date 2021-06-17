@@ -73,6 +73,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    implementation "com.jakewharton.timber:timber:4.7.1"
+
     implementation 'com.google.android.exoplayer:exoplayer:2.14.0'
     implementation 'com.google.android.exoplayer:extension-rtmp:2.14.0'
     implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.14.0'

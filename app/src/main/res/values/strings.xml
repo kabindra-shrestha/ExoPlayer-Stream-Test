@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ExoPlayer Stream Test App</string>
+
+    <string name="exo_player_error_message">Please refresh and try again. If this problem persists contact support.</string>
+    <string name="exo_player_error_prefix_code">EC-00-</string>
+    <string name="exo_player_unknown_exception_code">EC-UE</string>
 </resources>
