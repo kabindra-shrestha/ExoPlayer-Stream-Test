@@ -23,12 +23,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var playerView: PlayerView? = null
+    private var playerViewMain: PlayerView? = null
     private var player: SimpleExoPlayer? = null
-    private var progressBarSeriesPlayer: ProgressBar? = null
-    private var seriesErrorContainer: ConstraintLayout? = null
-    private var textViewSeriesPlayerErrorMessage: TextView? = null
-    private var textViewSeriesPlayerErrorCode: TextView? = null
+    private var progressBarMain: ProgressBar? = null
+    private var containerErrorMain: ConstraintLayout? = null
+    private var textViewMainErrorMessage: TextView? = null
+    private var textViewMainErrorCode: TextView? = null
+    private var containerDescription: ConstraintLayout? = null
+    private var textViewMainVideoCodec: TextView? = null
+    private var textViewMainAudioCodec: TextView? = null
 
     private var playWhenReady = true
     private var currentWindow = 0
@@ -38,11 +41,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        playerView = player_view_main
-        progressBarSeriesPlayer = progress_bar_player
-        seriesErrorContainer = series_error_container
-        textViewSeriesPlayerErrorMessage = text_view_player_error_message
-        textViewSeriesPlayerErrorCode = text_view_player_error_code
+        playerViewMain = player_view_main
+        progressBarMain = progress_bar_main
+        containerErrorMain = container_error_main
+        textViewMainErrorMessage = text_view_main_error_message
+        textViewMainErrorCode = text_view_main_error_code
+        containerDescription = container_description
+        textViewMainVideoCodec = text_view_main_video_codec
+        textViewMainAudioCodec = text_view_main_audio_codec
+
+        showInfo(false)
 
         onClickListener()
     }
@@ -66,8 +74,7 @@ class MainActivity : AppCompatActivity() {
             val validated = edit_text_main_stream.isValidText()
 
             if (validated) {
-//                initializePlayer(edit_text_main_stream.text.toString())
-                initializePlayer("rtmp://webott.viatv.com.np:1935/v0t1/test101")
+                initializePlayer(edit_text_main_stream.text.toString())
 
                 edit_text_main_stream.text = null
             }
@@ -76,6 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializePlayer(stream: String) {
         showError(false)
+        /*showInfo(true)*/showInfo(false)
 
         if (player == null) {
             // Build a HttpDataSource.Factory with cross-protocol redirects enabled.
@@ -105,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 .build()*/
         }
 
-        playerView!!.player = player
+        playerViewMain!!.player = player
 
         var mediaItem: MediaItem
 
@@ -128,23 +136,23 @@ class MainActivity : AppCompatActivity() {
                 when (playbackState) {
                     ExoPlayer.STATE_IDLE -> {
                         stateString = "ExoPlayer.STATE_IDLE      -"
-                        showPlayerProgressBar(progressBarSeriesPlayer!!, false)
+                        showPlayerProgressBar(progressBarMain!!, false)
                     }
                     ExoPlayer.STATE_BUFFERING -> {
                         stateString = "ExoPlayer.STATE_BUFFERING -"
-                        showPlayerProgressBar(progressBarSeriesPlayer!!, true)
+                        showPlayerProgressBar(progressBarMain!!, true)
                     }
                     ExoPlayer.STATE_READY -> {
                         stateString = "ExoPlayer.STATE_READY     -"
-                        showPlayerProgressBar(progressBarSeriesPlayer!!, false)
+                        showPlayerProgressBar(progressBarMain!!, false)
                     }
                     ExoPlayer.STATE_ENDED -> {
                         stateString = "ExoPlayer.STATE_ENDED     -"
-                        showPlayerProgressBar(progressBarSeriesPlayer!!, false)
+                        showPlayerProgressBar(progressBarMain!!, false)
                     }
                     else -> {
                         stateString = "UNKNOWN_STATE             -"
-                        showPlayerProgressBar(progressBarSeriesPlayer!!, false)
+                        showPlayerProgressBar(progressBarMain!!, false)
                     }
                 }
 
@@ -154,9 +162,11 @@ class MainActivity : AppCompatActivity() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
 
-                showPlayerProgressBar(progressBarSeriesPlayer!!, false)
+                showPlayerProgressBar(progressBarMain!!, false)
 
                 releasePlayer()
+
+                showInfo(false)
 
                 try {
                     var errorResponseCode = ""
@@ -165,26 +175,29 @@ class MainActivity : AppCompatActivity() {
                             "-" + (error.sourceException as HttpDataSource.InvalidResponseCodeException).responseCode
                     }
 
-                    textViewSeriesPlayerErrorMessage!!.text =
+                    textViewMainErrorMessage!!.text =
                         getString(R.string.exo_player_error_message)
-                    /*textViewSeriesPlayerErrorSupport!!.text =
+                    /*textViewMainPlayerErrorSupport!!.text =
                         getString(R.string.exo_player_error_support)*/
-                    textViewSeriesPlayerErrorCode!!.text =
+                    textViewMainErrorCode!!.text =
                         getString(R.string.exo_player_error_prefix_code) + errorHandler(error)
 
                     showError(true)
                 } catch (e: Exception) {
-                    textViewSeriesPlayerErrorMessage!!.text =
+                    textViewMainErrorMessage!!.text =
                         getString(R.string.exo_player_error_message)
-                    /*textViewSeriesPlayerErrorSupport!!.text =
+                    /*textViewMainPlayerErrorSupport!!.text =
                         getString(R.string.exo_player_error_support)*/
-                    textViewSeriesPlayerErrorCode!!.text =
+                    textViewMainErrorCode!!.text =
                         getString(R.string.exo_player_unknown_exception_code) + errorHandler(error)
 
                     showError(true)
                 }
             }
         })
+
+        textViewMainVideoCodec!!.text = "Video Codec: " + player!!.videoFormat
+        textViewMainVideoCodec!!.text = "Audio Codec: " + player!!.audioFormat
 
         player!!.prepare()
     }
@@ -222,9 +235,17 @@ class MainActivity : AppCompatActivity() {
 
     fun showError(show: Boolean) {
         if (show) {
-            seriesErrorContainer!!.visibility = View.VISIBLE
+            containerErrorMain!!.visibility = View.VISIBLE
         } else {
-            seriesErrorContainer!!.visibility = View.GONE
+            containerErrorMain!!.visibility = View.GONE
+        }
+    }
+
+    fun showInfo(show: Boolean) {
+        if (show) {
+            containerDescription!!.visibility = View.VISIBLE
+        } else {
+            containerDescription!!.visibility = View.GONE
         }
     }
 }
