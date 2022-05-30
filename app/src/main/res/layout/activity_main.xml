@@ -51,8 +51,8 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:padding="5dp"
-            android:textColor="@color/white"
             android:textAlignment="gravity"
+            android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,7 +125,7 @@
         app:layout_constraintTop_toBottomOf="@id/edit_text_main_stream_layout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container_video_codec"
+            android:id="@+id/container_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/container_description"
@@ -135,92 +135,42 @@
             app:layout_constraintVertical_bias="0.0">
 
             <TextView
-                android:id="@+id/text_view_main_video_codec_label"
-                android:layout_width="wrap_content"
+                android:id="@+id/text_view_info_label"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
+                android:layout_marginBottom="0dp"
+                android:gravity="start"
                 android:padding="5dp"
-                android:text="Video Info"
+                android:text="Information"
                 android:textAlignment="gravity"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/text_view_main_video_codec"
+                app:layout_constraintBottom_toTopOf="@id/text_view_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_video_codec" />
+                app:layout_constraintTop_toTopOf="@id/container_info" />
 
             <TextView
-                android:id="@+id/text_view_main_video_codec"
-                android:layout_width="wrap_content"
+                android:id="@+id/text_view_info"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
+                android:layout_marginBottom="0dp"
+                android:gravity="start"
                 android:padding="5dp"
                 android:textAlignment="gravity"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@id/container_video_codec"
+                app:layout_constraintBottom_toBottomOf="@id/container_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_main_video_codec_label" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container_audio_codec"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/container_description"
-            app:layout_constraintEnd_toEndOf="@id/container_description"
-            app:layout_constraintStart_toStartOf="@id/container_description"
-            app:layout_constraintTop_toBottomOf="@id/container_video_codec"
-            app:layout_constraintVertical_bias="0.0">
-
-            <TextView
-                android:id="@+id/text_view_main_audio_codec_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Audio Info"
-                android:textAlignment="gravity"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/text_view_main_audio_codec"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_audio_codec" />
-
-            <TextView
-                android:id="@+id/text_view_main_audio_codec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:textAlignment="gravity"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@id/container_audio_codec"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_main_audio_codec_label" />
+                app:layout_constraintTop_toBottomOf="@id/text_view_info_label" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import com.google.android.exoplayer2.util.DebugTextViewHelper
 import com.kabindra.exoplayerstreamtestapp.ExoPlayerErrorUtils.errorHandler
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -30,8 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var textViewMainErrorMessage: TextView? = null
     private var textViewMainErrorCode: TextView? = null
     private var containerDescription: ConstraintLayout? = null
-    private var textViewMainVideoCodec: TextView? = null
-    private var textViewMainAudioCodec: TextView? = null
+    private var textViewInfo: TextView? = null
 
     private var playWhenReady = true
     private var currentWindow = 0
@@ -47,8 +47,7 @@ class MainActivity : AppCompatActivity() {
         textViewMainErrorMessage = text_view_main_error_message
         textViewMainErrorCode = text_view_main_error_code
         containerDescription = container_description
-        textViewMainVideoCodec = text_view_main_video_codec
-        textViewMainAudioCodec = text_view_main_audio_codec
+        textViewInfo = text_view_info
 
         showInfo(false)
 
@@ -83,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializePlayer(stream: String) {
         showError(false)
-        /*showInfo(true)*/showInfo(false)
+        showInfo(true)
 
         if (player == null) {
             // Build a HttpDataSource.Factory with cross-protocol redirects enabled.
@@ -126,6 +125,9 @@ class MainActivity : AppCompatActivity() {
         playWhenReady = true
         player!!.playWhenReady = playWhenReady
         player!!.seekTo(currentWindow, playbackPosition)
+
+        val debugTextViewHelper= DebugTextViewHelper(player!!, textViewInfo!!)
+        debugTextViewHelper.start()
 
         Log.d("MainActivity", "Current  Playing Home $stream")
 
@@ -195,9 +197,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-        textViewMainVideoCodec!!.text = "Video Codec: " + player!!.videoFormat
-        textViewMainVideoCodec!!.text = "Audio Codec: " + player!!.audioFormat
 
         player!!.prepare()
     }
