@@ -10,22 +10,24 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.DebugTextViewHelper
-import com.kabindra.exoplayerstreamtestapp.ExoPlayerErrorUtils.errorHandler
+import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var playerViewMain: PlayerView? = null
-    private var player: SimpleExoPlayer? = null
+    private var playerViewMain: StyledPlayerView? = null
+    private var player: ExoPlayer? = null
     private var progressBarMain: ProgressBar? = null
     private var containerErrorMain: ConstraintLayout? = null
     private var textViewMainErrorMessage: TextView? = null
@@ -85,22 +87,27 @@ class MainActivity : AppCompatActivity() {
         showInfo(true)
 
         if (player == null) {
-            // Build a HttpDataSource.Factory with cross-protocol redirects enabled.
-            val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSourceFactory(
-                ExoPlayerLibraryInfo.DEFAULT_USER_AGENT,
-                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
-                true
+            // Build a DefaultHttpDataSource.Factory with cross-protocol redirects enabled.
+            val httpDataSourceFactory: DefaultHttpDataSource.Factory =
+                DefaultHttpDataSource.Factory()
+            httpDataSourceFactory.setUserAgent(
+                Util.getUserAgent(
+                    this,
+                    resources.getString(R.string.app_name)
+                )
             )
-            // Wrap the HttpDataSource.Factory in a DefaultDataSourceFactory, which adds in
+            httpDataSourceFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
+            httpDataSourceFactory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS)
+            httpDataSourceFactory.setAllowCrossProtocolRedirects(true)
+            // Wrap the DefaultHttpDataSource.Factory in a DefaultDataSource.Factory, which adds in
             // support for requesting data from other sources (e.g., files, resources, etc).
-            val dataSourceFactory = DefaultDataSourceFactory(this, httpDataSourceFactory)
+            val dataSourceFactory = DefaultDataSource.Factory(this, httpDataSourceFactory)
 
             val trackSelector = DefaultTrackSelector(this)
             trackSelector.setParameters(
                 trackSelector.buildUponParameters().setMaxVideoSizeSd()
             )
-            player = SimpleExoPlayer.Builder(this)
+            player = ExoPlayer.Builder(this)
                 .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
                 // .setTrackSelector(trackSelector)
                 .build()
@@ -114,9 +121,7 @@ class MainActivity : AppCompatActivity() {
 
         playerViewMain!!.player = player
 
-        var mediaItem: MediaItem
-
-        mediaItem = MediaItem.Builder()
+        var mediaItem: MediaItem = MediaItem.Builder()
             .setUri(stream)
             // .setMimeType(MimeTypes.APPLICATION_M3U8)
             .build()
@@ -126,12 +131,12 @@ class MainActivity : AppCompatActivity() {
         player!!.playWhenReady = playWhenReady
         player!!.seekTo(currentWindow, playbackPosition)
 
-        val debugTextViewHelper= DebugTextViewHelper(player!!, textViewInfo!!)
+        val debugTextViewHelper = DebugTextViewHelper(player!!, textViewInfo!!)
         debugTextViewHelper.start()
 
         Log.d("MainActivity", "Current  Playing Home $stream")
 
-        player!!.addListener(object : Player.EventListener {
+        player!!.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 var stateString: String = ""
 
@@ -161,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "onPlaybackStateChanged to $stateString")
             }
 
-            override fun onPlayerError(error: ExoPlaybackException) {
+            override fun onPlayerError(error: PlaybackException) {
                 super.onPlayerError(error)
 
                 showPlayerProgressBar(progressBarMain!!, false)
@@ -172,9 +177,9 @@ class MainActivity : AppCompatActivity() {
 
                 try {
                     var errorResponseCode = ""
-                    if (error.sourceException is HttpDataSource.InvalidResponseCodeException) {
+                    if (error.cause is HttpDataSource.InvalidResponseCodeException) {
                         errorResponseCode =
-                            "-" + (error.sourceException as HttpDataSource.InvalidResponseCodeException).responseCode
+                            "-" + (error.cause as HttpDataSource.InvalidResponseCodeException).responseCode
                     }
 
                     textViewMainErrorMessage!!.text =
@@ -182,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                     /*textViewMainPlayerErrorSupport!!.text =
                         getString(R.string.exo_player_error_support)*/
                     textViewMainErrorCode!!.text =
-                        getString(R.string.exo_player_error_prefix_code) + errorHandler(error)
+                        getString(R.string.exo_player_error_prefix_code) + error.errorCode + "\n" + error.message
 
                     showError(true)
                 } catch (e: Exception) {
@@ -191,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                     /*textViewMainPlayerErrorSupport!!.text =
                         getString(R.string.exo_player_error_support)*/
                     textViewMainErrorCode!!.text =
-                        getString(R.string.exo_player_unknown_exception_code) + errorHandler(error)
+                        getString(R.string.exo_player_unknown_exception_code) + error.errorCode + "\n" + error.message
 
                     showError(true)
                 }
