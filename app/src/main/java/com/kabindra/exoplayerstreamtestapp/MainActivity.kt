@@ -111,12 +111,6 @@ class MainActivity : AppCompatActivity() {
                 .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
                 // .setTrackSelector(trackSelector)
                 .build()
-
-            /*val mediaSourceFactory: MediaSourceFactory =
-                DefaultMediaSourceFactory(RtmpDataSourceFactory())
-            player = SimpleExoPlayer.Builder(this)
-                .setMediaSourceFactory(mediaSourceFactory)
-                .build()*/
         }
 
         playerViewMain!!.player = player
