@@ -77,8 +77,8 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:4.7.1"
 
-    implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
-    implementation 'com.google.android.exoplayer:extension-rtmp:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.17.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.0'
+    implementation 'com.google.android.exoplayer:extension-rtmp:2.18.0'
+    implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.18.0'
 
 }
