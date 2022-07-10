@@ -22,9 +22,14 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.DebugTextViewHelper
 import com.google.android.exoplayer2.util.Util
+import com.kabindra.exoplayerstreamtestapp.updatemanager.UpdateManager
+import com.kabindra.exoplayerstreamtestapp.updatemanager.UpdateManagerConstant
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    // Declare the UpdateManager
+    private lateinit var mUpdateManager: UpdateManager
 
     private var playerViewMain: StyledPlayerView? = null
     private var player: ExoPlayer? = null
@@ -43,6 +48,29 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Initialize the Update Manager with the Activity and the Update Mode
+        mUpdateManager = UpdateManager.Builder(this)
+
+        // Callback from UpdateInfoListener
+        // You can get the available version code of the apk in Google Play
+        // Number of days passed since the user was notified of an update through the Google Play
+        mUpdateManager.addUpdateInfoListener(object : UpdateManager.UpdateInfoListener {
+            override fun onReceiveVersionCode(code: Int) {
+                // You can show available version code here
+            }
+
+            override fun onReceiveStalenessDays(days: Int) {
+                // You can show staleness days here
+            }
+        })
+
+        // Callback from Flexible Update Progress
+        // This is only available for Flexible mode
+        // Find more from https://developer.android.com/guide/playcore/in-app-updates#monitor_flexible
+        mUpdateManager.addFlexibleUpdateDownloadListener { bytesDownloaded, totalBytes ->
+            // You can show download progress by $bytesDownloaded / $totalBytes
+        }
+
         playerViewMain = player_view_main
         progressBarMain = progress_bar_main
         containerErrorMain = container_error_main
@@ -52,6 +80,8 @@ class MainActivity : AppCompatActivity() {
         textViewInfo = text_view_info
 
         showInfo(false)
+
+        callFlexibleUpdate()
 
         onClickListener()
     }
@@ -245,5 +275,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             containerDescription!!.visibility = View.GONE
         }
+    }
+
+    private fun callFlexibleUpdate() {
+        // Start a Flexible Update
+        mUpdateManager.mode(UpdateManagerConstant.FLEXIBLE).start()
+    }
+
+    private fun callImmediateUpdate() {
+        // Start a Immediate Update
+        mUpdateManager.mode(UpdateManagerConstant.IMMEDIATE).start()
     }
 }

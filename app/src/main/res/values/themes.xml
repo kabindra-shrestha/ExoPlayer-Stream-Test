@@ -1,5 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.ExoPlayerStreamTestApp" parent="Theme.Material3.Light.NoActionBar">
-    </style>
+    <style name="Theme.ExoPlayerStreamTestApp" parent="Theme.Material3.Light.NoActionBar"></style>
 </resources>
